@@ -5,32 +5,29 @@
  * 2S = Two of Spades
  */
 
-(() => {
+const myModule = (() => {
   'use strict'
 
-  let deck = [];
-  const suites = ['C', 'D', 'H', 'S'];
-  const specials = {
-    1: 'A',
-    11: 'J',
-    12: 'Q',
-    13: 'K'
-  }
+  let deck       = [];
+  const suites   = ['C', 'D', 'H', 'S'],
+        specials = {
+          1: 'A',
+          11: 'J',
+          12: 'Q',
+          13: 'K'
+        };
 
-  let playerPoints = 0, computerPoints = 0;
+  let playerPoints = 0;
 
   // DOM References
-  const title = document.querySelector('header')
-
-  const btnDeal = document.querySelector('#btnDeal');
-  const btnEnd = document.querySelector('#btnEnd');
-  const btnNew = document.querySelector('#btnNew');
-
-  const playerScore = document.querySelector('#player-container').querySelector('small');
-  const computerScore = document.querySelector('#computer-container').querySelector('small');
-
-  const playerCards = document.querySelector('#player-cards');
-  const computerCards = document.querySelector('#computer-cards');
+  const title         = document.querySelector('header'),
+        btnDeal       = document.querySelector('#btnDeal'),
+        btnEnd        = document.querySelector('#btnEnd'),
+        btnNew        = document.querySelector('#btnNew'),
+        playerScore   = document.querySelector('#player-container').querySelector('small'),
+        computerScore = document.querySelector('#computer-container').querySelector('small'),
+        playerCards   = document.querySelector('#player-cards'),
+        computerCards = document.querySelector('#computer-cards');
 
   const initDeck = () => {
     deck = []
@@ -40,7 +37,7 @@
         deck.push(val + suite)
       }
     }
-    deck = _.shuffle(deck)
+    return _.shuffle(deck)
   }
 
   const dealCard = () => {
@@ -56,7 +53,6 @@
     // Number(x) is equivalent to x * 1
   }
 
-
   const handleTurn = (points, scoreDom, cardsDom) => {
     const card = dealCard();
     points += cardValue(card);
@@ -70,7 +66,7 @@
   }
 
   const newGame = () => {
-    initDeck();
+    deck = initDeck();
 
     title.innerText = "Blackjack";
 
@@ -78,7 +74,6 @@
     playerScore.innerText = 0
     playerCards.innerHTML = ''
 
-    computerPoints = 0
     computerScore.innerText = 0
     computerCards.innerHTML = ''
 
@@ -86,31 +81,31 @@
     btnEnd.disabled = false;
   }
 
-
-  // Computer Turn
-
   const turnComputer = (minPoints) => {
+    let computerPoints = 0
     do {
       computerPoints = handleTurn(computerPoints, computerScore, computerCards);
     } while (computerPoints < minPoints && minPoints <= 21);
+    return computerPoints;
+  }
 
-    if (computerPoints === minPoints) {
+  const getWinner = (playerPoints, computerPoints) => {
+    if (computerPoints === playerPoints) {
       title.innerText = "Draw"
       return
     }
-
     if (computerPoints <= 21) {
       title.innerText = "Computer won";
       return
     }
-
     title.innerText = "Player Won";
   }
 
   const endTurn = () => {
     btnDeal.disabled = true;
     btnEnd.disabled = true;
-    turnComputer(playerPoints);
+    const computerPoints = turnComputer(playerPoints);
+    getWinner(playerPoints, computerPoints)
   }
 
 
@@ -131,4 +126,8 @@
   })
 
   newGame();
+
+  return {
+    // You can return functions or whatever you need
+  }
 })();
