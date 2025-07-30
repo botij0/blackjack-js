@@ -14,7 +14,7 @@ html, body{
     font-weight: bold;
 }
 
-#player-cards{
+#player-cards, #computer-cards {
   display: flex;
   margin: 50px 0px;
   min-height: 250px;

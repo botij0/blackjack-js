@@ -14,6 +14,20 @@ const specials = {
   13: 'K'
 }
 
+let playerPoints = 0, computerPoints = 0;
+
+// DOM References
+const title = document.querySelector('header')
+
+const btnDeal = document.querySelector('#btnDeal');
+const btnEnd = document.querySelector('#btnEnd');
+
+const playerScore = document.querySelector('#player-container').querySelector('small');
+const computerScore = document.querySelector('#computer-container').querySelector('small');
+
+const playerCards = document.querySelector('#player-cards');
+const computerCards = document.querySelector('#computer-cards');
+
 const initDeck = () => {
   for (let i = 1; i <= 13; i++){
     for (let suite of suites) {
@@ -40,4 +54,55 @@ const cardValue = (card) => {
   // Number(x) is equivalent to x * 1
 }
 
-console.log(cardValue('7D'))
+
+const handleTurn = (points, scoreDom, cardsDom) => {
+  const card = dealCard();
+  points += cardValue(card);
+  scoreDom.innerText = points;
+
+  const newCardImg = document.createElement('img');
+  newCardImg.src = `assets/cards/${card}.png`;
+  newCardImg.classList.add('card');
+  cardsDom.append(newCardImg);
+  return points
+}
+
+
+// Computer Turn
+
+const turnComputer = (minPoints) => {
+  do {
+    computerPoints = handleTurn(computerPoints, computerScore, computerCards);
+  } while (computerPoints < minPoints && minPoints <= 21);
+
+  if (computerPoints === minPoints) {
+    title.innerText = "Draw"
+    return
+  }
+
+  if (computerPoints <= 21) {
+    title.innerText = "Computer won";
+    return
+  }
+
+  title.innerText ="Player Won";
+}
+
+const endTurn = () => {
+  btnDeal.disabled = true;
+  btnEnd.disabled = true;
+  turnComputer(playerPoints);
+}
+
+
+// Events
+btnDeal.addEventListener('click', () => {
+  playerPoints = handleTurn(playerPoints, playerScore, playerCards);
+  if (playerPoints < 21){return}
+  endTurn();
+
+});
+
+btnEnd.addEventListener('click', () => {
+  endTurn();
+})

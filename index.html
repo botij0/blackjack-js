@@ -17,32 +17,28 @@
         <header class="title">Blackjack</header>
 
         <div class="row mt-2">
-            <div class="col text-center">
-                <button class="btn btn-secondary me-3">New Game</button>
-                <button class="btn btn-primary me-3">Deal Card</button>
-                <button class="btn btn-danger">End Turn</button>
+            <div id="divButtons" class="col text-center">
+                <button id="btnNew" class="btn btn-secondary me-3">
+                    New Game
+                </button>
+                <button id="btnDeal" class="btn btn-primary me-3">
+                    Deal Card
+                </button>
+                <button id="btnEnd" class="btn btn-danger">End Turn</button>
             </div>
         </div>
 
-        <div class="row container">
+        <div id="player-container" class="row container">
             <div class="col">
                 <h1>Player - <small>0</small></h1>
-                <div id="player-cards">
-                    <img class="card" src="assets/cards/10C.png" />
-                    <img class="card" src="assets/cards/10C.png" />
-                    <img class="card" src="assets/cards/10C.png" />
-                </div>
+                <div id="player-cards"></div>
             </div>
         </div>
 
-        <div class="row container">
+        <div id="computer-container" class="row container">
             <div class="col">
                 <h1>Computer - <small>0</small></h1>
-                <div id="player-cards">
-                    <img class="card" src="assets/cards/10C.png" />
-                    <img class="card" src="assets/cards/10C.png" />
-                    <img class="card" src="assets/cards/10C.png" />
-                </div>
+                <div id="computer-cards"></div>
             </div>
         </div>
 
