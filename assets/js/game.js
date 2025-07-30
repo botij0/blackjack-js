@@ -30,6 +30,7 @@ const playerCards = document.querySelector('#player-cards');
 const computerCards = document.querySelector('#computer-cards');
 
 const initDeck = () => {
+  deck = []
   for (let i = 1; i <= 13; i++){
     for (let suite of suites) {
       const val = specials[i] ? specials[i] : i
