@@ -21,6 +21,7 @@ const title = document.querySelector('header')
 
 const btnDeal = document.querySelector('#btnDeal');
 const btnEnd = document.querySelector('#btnEnd');
+const btnNew = document.querySelector('#btnNew');
 
 const playerScore = document.querySelector('#player-container').querySelector('small');
 const computerScore = document.querySelector('#computer-container').querySelector('small');
@@ -37,9 +38,6 @@ const initDeck = () => {
   }
   deck = _.shuffle(deck)
 }
-
-initDeck();
-
 
 const dealCard = () => {
   if (deck.length === 0) {
@@ -65,6 +63,23 @@ const handleTurn = (points, scoreDom, cardsDom) => {
   newCardImg.classList.add('card');
   cardsDom.append(newCardImg);
   return points
+}
+
+const newGame = () => {
+  initDeck();
+
+  title.innerText = "Blackjack";
+
+  playerPoints = 0
+  playerScore.innerText = 0
+  playerCards.innerHTML = ''
+
+  computerPoints = 0
+  computerScore.innerText = 0
+  computerCards.innerHTML = ''
+
+  btnDeal.disabled = false;
+  btnEnd.disabled = false;
 }
 
 
@@ -106,3 +121,9 @@ btnDeal.addEventListener('click', () => {
 btnEnd.addEventListener('click', () => {
   endTurn();
 })
+
+btnNew.addEventListener('click', () => {
+  newGame();
+})
+
+newGame();
