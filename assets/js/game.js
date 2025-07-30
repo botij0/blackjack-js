@@ -5,126 +5,130 @@
  * 2S = Two of Spades
  */
 
-let deck = [];
-const suites = ['C', 'D', 'H', 'S'];
-const specials = {
-  1: 'A',
-  11: 'J',
-  12: 'Q',
-  13: 'K'
-}
+(() => {
+  'use strict'
 
-let playerPoints = 0, computerPoints = 0;
+  let deck = [];
+  const suites = ['C', 'D', 'H', 'S'];
+  const specials = {
+    1: 'A',
+    11: 'J',
+    12: 'Q',
+    13: 'K'
+  }
 
-// DOM References
-const title = document.querySelector('header')
+  let playerPoints = 0, computerPoints = 0;
 
-const btnDeal = document.querySelector('#btnDeal');
-const btnEnd = document.querySelector('#btnEnd');
-const btnNew = document.querySelector('#btnNew');
+  // DOM References
+  const title = document.querySelector('header')
 
-const playerScore = document.querySelector('#player-container').querySelector('small');
-const computerScore = document.querySelector('#computer-container').querySelector('small');
+  const btnDeal = document.querySelector('#btnDeal');
+  const btnEnd = document.querySelector('#btnEnd');
+  const btnNew = document.querySelector('#btnNew');
 
-const playerCards = document.querySelector('#player-cards');
-const computerCards = document.querySelector('#computer-cards');
+  const playerScore = document.querySelector('#player-container').querySelector('small');
+  const computerScore = document.querySelector('#computer-container').querySelector('small');
 
-const initDeck = () => {
-  deck = []
-  for (let i = 1; i <= 13; i++){
-    for (let suite of suites) {
-      const val = specials[i] ? specials[i] : i
-      deck.push(val + suite)
+  const playerCards = document.querySelector('#player-cards');
+  const computerCards = document.querySelector('#computer-cards');
+
+  const initDeck = () => {
+    deck = []
+    for (let i = 1; i <= 13; i++) {
+      for (let suite of suites) {
+        const val = specials[i] ? specials[i] : i
+        deck.push(val + suite)
+      }
     }
-  }
-  deck = _.shuffle(deck)
-}
-
-const dealCard = () => {
-  if (deck.length === 0) {
-    throw 'No remain cards in deck'
-  }
-  return deck.pop()
-}
-
-const cardValue = (card) => {
-  const num = card.substring(0, card.length - 1);
-  return !isNaN(num) ? Number(num) : num === 'A' ? 11 : 10;
-  // Number(x) is equivalent to x * 1
-}
-
-
-const handleTurn = (points, scoreDom, cardsDom) => {
-  const card = dealCard();
-  points += cardValue(card);
-  scoreDom.innerText = points;
-
-  const newCardImg = document.createElement('img');
-  newCardImg.src = `assets/cards/${card}.png`;
-  newCardImg.classList.add('card');
-  cardsDom.append(newCardImg);
-  return points
-}
-
-const newGame = () => {
-  initDeck();
-
-  title.innerText = "Blackjack";
-
-  playerPoints = 0
-  playerScore.innerText = 0
-  playerCards.innerHTML = ''
-
-  computerPoints = 0
-  computerScore.innerText = 0
-  computerCards.innerHTML = ''
-
-  btnDeal.disabled = false;
-  btnEnd.disabled = false;
-}
-
-
-// Computer Turn
-
-const turnComputer = (minPoints) => {
-  do {
-    computerPoints = handleTurn(computerPoints, computerScore, computerCards);
-  } while (computerPoints < minPoints && minPoints <= 21);
-
-  if (computerPoints === minPoints) {
-    title.innerText = "Draw"
-    return
+    deck = _.shuffle(deck)
   }
 
-  if (computerPoints <= 21) {
-    title.innerText = "Computer won";
-    return
+  const dealCard = () => {
+    if (deck.length === 0) {
+      throw 'No remain cards in deck'
+    }
+    return deck.pop()
   }
 
-  title.innerText ="Player Won";
-}
-
-const endTurn = () => {
-  btnDeal.disabled = true;
-  btnEnd.disabled = true;
-  turnComputer(playerPoints);
-}
+  const cardValue = (card) => {
+    const num = card.substring(0, card.length - 1);
+    return !isNaN(num) ? Number(num) : num === 'A' ? 11 : 10;
+    // Number(x) is equivalent to x * 1
+  }
 
 
-// Events
-btnDeal.addEventListener('click', () => {
-  playerPoints = handleTurn(playerPoints, playerScore, playerCards);
-  if (playerPoints < 21){return}
-  endTurn();
+  const handleTurn = (points, scoreDom, cardsDom) => {
+    const card = dealCard();
+    points += cardValue(card);
+    scoreDom.innerText = points;
 
-});
+    const newCardImg = document.createElement('img');
+    newCardImg.src = `assets/cards/${card}.png`;
+    newCardImg.classList.add('card');
+    cardsDom.append(newCardImg);
+    return points
+  }
 
-btnEnd.addEventListener('click', () => {
-  endTurn();
-})
+  const newGame = () => {
+    initDeck();
 
-btnNew.addEventListener('click', () => {
+    title.innerText = "Blackjack";
+
+    playerPoints = 0
+    playerScore.innerText = 0
+    playerCards.innerHTML = ''
+
+    computerPoints = 0
+    computerScore.innerText = 0
+    computerCards.innerHTML = ''
+
+    btnDeal.disabled = false;
+    btnEnd.disabled = false;
+  }
+
+
+  // Computer Turn
+
+  const turnComputer = (minPoints) => {
+    do {
+      computerPoints = handleTurn(computerPoints, computerScore, computerCards);
+    } while (computerPoints < minPoints && minPoints <= 21);
+
+    if (computerPoints === minPoints) {
+      title.innerText = "Draw"
+      return
+    }
+
+    if (computerPoints <= 21) {
+      title.innerText = "Computer won";
+      return
+    }
+
+    title.innerText = "Player Won";
+  }
+
+  const endTurn = () => {
+    btnDeal.disabled = true;
+    btnEnd.disabled = true;
+    turnComputer(playerPoints);
+  }
+
+
+  // Events
+  btnDeal.addEventListener('click', () => {
+    playerPoints = handleTurn(playerPoints, playerScore, playerCards);
+    if (playerPoints < 21) { return }
+    endTurn();
+
+  });
+
+  btnEnd.addEventListener('click', () => {
+    endTurn();
+  })
+
+  btnNew.addEventListener('click', () => {
+    newGame();
+  })
+
   newGame();
-})
-
-newGame();
+})();
